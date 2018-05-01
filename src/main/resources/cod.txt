@@ -1,0 +1,5 @@
+halt
+add r2, r1,r4
+sub r3,r7,r8
+addi r2,r0,7
+ANDI R8,R2,0x8A00
