@@ -131,13 +131,13 @@ public class Transform {
             if(operation.getType()==6)
             {
                 code.append(adjustLength("",4));
-                code.append(adjustLength("",12));
+                code.append(adjustLength(numberFianl,16));
             }
 
             if(operation.getType()==7)
             {
                 code.append(adjustLength("",8));
-                code.append(adjustLength("",12));
+                code.append(adjustLength(numberFianl,16));
             }
 
 
