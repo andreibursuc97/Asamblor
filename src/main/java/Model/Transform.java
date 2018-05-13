@@ -9,17 +9,19 @@ public class Transform {
     private static final String detectRegisters;
     private static final String detectOperations;
     private static final String detectHexa;
+    private static final String type0;
 
     static {
         detectNumbers="[, ]+\\d+";
         detectRegisters="[, ]*[rR]\\d+";
         detectOperations="[a-zA-Z]+[0-9,]*[ \n\r]*";
         detectHexa="0x[0-9a-fA-F]{4}";
+        type0="[a-zA-Z][ ]*";
     }
 
-    public void transformLine(String line)
+    public String transformLine(String line) throws IllegalArgumentException
     {
-        try {
+
 
             Pattern op=Pattern.compile(detectOperations);
             Pattern p = Pattern.compile(detectNumbers);
@@ -43,12 +45,12 @@ public class Transform {
                 throw new IllegalArgumentException("Nu exista aceasta operatie!");
             }
 
-            StringBuilder code=new StringBuilder(operation.getCode());
+            StringBuilder code=new StringBuilder(operation.getCode()+"_");
             //System.out.println(operation.getCode());
 
 
             int registersCheck=0;
-            System.out.println("Registers:");
+            //System.out.println("Registers:");
             m = r.matcher(line);
             while (m.find()) {
                 //System.out.println(m.group());
@@ -60,10 +62,13 @@ public class Transform {
                     throw new IllegalArgumentException("Format gresit pentru un registru");
                 String binary = Integer.toString(num, 2);
                 binary=adjustLength(binary,4);
-                code.append(binary);
+                code.append(binary+"_");
                 registersCheck++;
             }
+
+
             //System.out.println(registersCheck);
+
             if((operation.getType()==7|| operation.getType()==0) && registersCheck!=0)
                 throw new IllegalArgumentException("Format gresit operatie");
 
@@ -120,7 +125,7 @@ public class Transform {
             }
 
             if(operation.getType()==1 || operation.getType()==5)
-                code.append(adjustLength("",16));
+                code.append(adjustLength("",20));
 
             if(operation.getType()==2)
                 code.append((adjustLength("",12)));
@@ -143,14 +148,10 @@ public class Transform {
 
 
             System.out.println(code.toString());
-        }
+
+            return code.toString();
 
 
-
-        catch (IllegalArgumentException e)
-        {
-            System.out.println(e.getMessage());
-        }
     }
 
     private String adjustLength(String code,int length)
