@@ -32,6 +32,48 @@ public class Writer {
             "type rom_type  is array (0 to 48 ) of STD_LOGIC_VECTOR (31 downto 0);\n" +
             "signal ROM:rom_type:=(\n";
 
+    private final String finish=" \n" +
+            "begin      \n" +
+            "\n" +
+            "process(clk, reset)\n" +
+            "begin\n" +
+            "    if(reset = '1') then\n" +
+            "        PC_int <= x\"00000000\";\n" +
+            "    else\n" +
+            "        if(rising_edge(clk)) then\n" +
+            "            if(we = '1') then\n" +
+            "                PC_int <= PC_out;\n" +
+            "            end if;\n" +
+            "        end if;\n" +
+            "    end if;\n" +
+            "end process;\n" +
+            "    \n" +
+            "instruction <= ROM(conv_integer(PC_int(5 downto 0)));\n" +
+            "\n" +
+            "sum_out <= PC_int + 1;\n" +
+            "\n" +
+            "process(sum_out, brench_address, PC_src)\n" +
+            "begin\n" +
+            "    if(PC_src = '0') then\n" +
+            "        mux_out1 <= sum_out;\n" +
+            "    else\n" +
+            "        mux_out1 <= brench_address;\n" +
+            "    end if;\n" +
+            "end process;\n" +
+            "\n" +
+            "process(mux_out1, jump_address, jump)\n" +
+            "begin\n" +
+            "    if(jump = '1') then\n" +
+            "        PC_out <= jump_address;\n" +
+            "    else\n" +
+            "        PC_out <= mux_out1;\n" +
+            "    end if;\n" +
+            "end process;\n" +
+            "\n" +
+            "PC_incrementat <= sum_out;\n" +
+            "\n" +
+            "end Behavioral;";
+
     private List<String> codes;
 
     public List<String> getCodes() {
@@ -51,11 +93,20 @@ public class Writer {
         try(FileWriter writer=new FileWriter("memory.txt")){
 
             writer.write(start);
+            int nr=1;
             for(String code:codes)
             {
                 writer.write("                      B\"");
-                writer.write(code+"\",\n");
+                if(nr<codes.size())
+                {writer.write(code+"\",\n");}
+                else
+                {
+                    writer.write(code+"\"\n                     );\n");
+                }
+                nr++;
             }
+
+            writer.write(finish);
 
         }catch (IOException e){
             e.printStackTrace();

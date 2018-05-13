@@ -1,0 +1,76 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+entity UnitateIF is
+    Port ( clk : in STD_LOGIC;
+           RESET : in STD_LOGIC;
+           WE : in STD_LOGIC;
+           brench_address: in STD_LOGIC_VECTOR (31 downto 0);
+           jump_address: in STD_LOGIC_VECTOR(31 downto 0);
+           PC_src: in STD_LOGIC;
+           jump: in STD_LOGIC;
+           PC_incrementat: out STD_LOGIC_VECTOR(31 downto 0);
+           instruction: out STD_LOGIC_VECTOR (31 downto 0)
+           );
+end UnitateIF;
+
+architecture Behavioral of UnitateIF is
+signal PC_int : STD_LOGIC_VECTOR (31 downto 0);
+signal PC_out: STD_LOGIC_VECTOR (31 downto 0);
+signal sum_out : STD_LOGIC_VECTOR (31 downto 0);
+signal mux_out1 : STD_LOGIC_VECTOR (31 downto 0);
+
+type rom_type  is array (0 to 48 ) of STD_LOGIC_VECTOR (31 downto 0);
+signal ROM:rom_type:=(
+                      B"01101001_000000000000000000000000",
+                      B"00000010_0010_0001_0100_000000000000",
+                      B"00000101_0011_0111_1000_000000000000",
+                      B"00100010_0010_0000_0000000000000111",
+                      B"00101000_1000_0010_1000101000000000",
+                      B"00110000_1000_00000000000000001010",
+                      B"00100010_0010_0000_0000000000000111",
+                      B"01101000_000000000000000000001010",
+                      B"01110000_0011_00000000000000000000"
+                     );
+ 
+begin      
+
+process(clk, reset)
+begin
+    if(reset = '1') then
+        PC_int <= x"00000000";
+    else
+        if(rising_edge(clk)) then
+            if(we = '1') then
+                PC_int <= PC_out;
+            end if;
+        end if;
+    end if;
+end process;
+    
+instruction <= ROM(conv_integer(PC_int(5 downto 0)));
+
+sum_out <= PC_int + 1;
+
+process(sum_out, brench_address, PC_src)
+begin
+    if(PC_src = '0') then
+        mux_out1 <= sum_out;
+    else
+        mux_out1 <= brench_address;
+    end if;
+end process;
+
+process(mux_out1, jump_address, jump)
+begin
+    if(jump = '1') then
+        PC_out <= jump_address;
+    else
+        PC_out <= mux_out1;
+    end if;
+end process;
+
+PC_incrementat <= sum_out;
+
+end Behavioral;
