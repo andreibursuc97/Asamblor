@@ -41,10 +41,7 @@ public class Reading {
                 nr++;
             }
 
-            for (HashMap.Entry<String, Integer> entry : labels.entrySet())
-            {
-                System.out.println(entry.getKey() + "/" + entry.getValue());
-            }
+
 
             reader.close();
             return records;

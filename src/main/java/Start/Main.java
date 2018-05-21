@@ -32,7 +32,7 @@ public class Main {
         }
         catch (IllegalArgumentException e)
         {
-            System.out.println(e.getMessage()+" at line "+nr);
+            System.out.println(e.getMessage()+" la linia "+nr);
         }
     }
 }

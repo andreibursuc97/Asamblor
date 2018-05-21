@@ -143,7 +143,7 @@ public class Transform {
                     else
                     {
                         numberFianl = Integer.toString(Integer.parseInt(Integer.toString(labels.get(label) - nr)), 2);
-                        System.out.println(numberFianl);
+                        //System.out.println(numberFianl);
                         numberFianl=reverse(numberFianl);
                         negativ=true;
                     }
@@ -235,7 +235,7 @@ public class Transform {
 
 
 
-            System.out.println(code.toString());
+            //System.out.println(code.toString());
 
             return code.toString();
 
