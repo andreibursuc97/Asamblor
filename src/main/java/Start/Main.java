@@ -19,10 +19,11 @@ public class Main {
             Reading reading = new Reading();
             Transform transform = new Transform();
             List<String> lines = reading.readFile(filename);
+            transform.setLabels(reading.getLabels());
             List<String> codes = new ArrayList<>();
             nr=1;
             for (String line : lines) {
-                codes.add(transform.transformLine(line));
+                codes.add(transform.transformLine(line,nr));
                 nr++;
             }
 

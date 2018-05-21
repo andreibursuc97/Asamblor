@@ -59,6 +59,8 @@ public class Writer {
             int nr=1;
             for(String code:codes)
             {
+                if(code.equals("comment"))
+                    continue;
                 writer.write("                      B\"");
                 if(nr<codes.size())
                 {writer.write(code+"\",\n");}

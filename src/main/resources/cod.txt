@@ -1,9 +1,22 @@
-halt
-add r2, r1,r4
-sub r3,r7,r8
-addi r2,r0,7
-ANDI R8,R2,0x8A00
-jmpl r8,10
-addi r2,r0,7
-jmp 10
-jmpr r3
+; Înmulțire de 16 x 16 biți, produs de 32 de biți
+; R1 – Deînmulțit (45 = 0x2D)
+; R2 – Înmulțitor (36 = 0x24)
+; R3 – Produs
+; R4 – Contor de iterații
+MULT:
+    XOR R0,R0,R0    ; resetam la 0
+    ADDI R1,R0,45   ; încarcă deînmulțitul (D)
+    ADDI R2,R0,36   ; încarcă înmulțitorul (I)
+    MOVA R3,R0      ; inițializează produsul (P) cu 0
+    ADDI R4,R0,16   ; inițializează contorul (C) cu 16
+TESTQ0:
+    ANDI R5,R2,1    ; testează bitul 0 al I
+    BZ R5,BITZERO   ; salt dacă bitul este zero
+    ADD R3,R3,R1    ; adună D la P
+BITZERO:
+    SHL R1,R1,1     ; deplasează D la stânga
+    SHR R2,R2,1     ; deplasează I la dreapta
+    SUBI R4,R4,1    ; decrementează C
+    BNZ R4,TESTQ0   ; repetă dacă C /= 0
+    MOVA R0,R3      ; copiază rezultatul în registrul R0
+    HALT
