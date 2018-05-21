@@ -259,7 +259,7 @@ public class Transform {
 
     private String reverse(String numberFianl)
     {
-        System.out.println(numberFianl);
+        //System.out.println(numberFianl);
         numberFianl=numberFianl.replaceAll("-","");
         int length=numberFianl.length();
         StringBuilder numar=new StringBuilder();
