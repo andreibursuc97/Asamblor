@@ -23,7 +23,7 @@ public class Main {
             List<String> codes = new ArrayList<>();
             nr=1;
             for (String line : lines) {
-                codes.add(transform.transformLine(line,nr));
+                codes.add(transform.transformLine(line));
                 nr++;
             }
 

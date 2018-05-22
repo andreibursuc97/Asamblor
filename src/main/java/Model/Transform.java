@@ -14,6 +14,7 @@ public class Transform {
     private static final String detectLabels;
     private static final String commentAfterOp;
     private HashMap<String,Integer> labels=new HashMap<>();
+    private int nr=0;
 
     static {
         detectNumbers="[, ]+-?\\d+";
@@ -30,7 +31,7 @@ public class Transform {
         this.labels = labels;
     }
 
-    public String transformLine(String line,int nr) throws IllegalArgumentException
+    public String transformLine(String line) throws IllegalArgumentException
     {
 
             Pattern comm=Pattern.compile(detectComment);
@@ -63,13 +64,14 @@ public class Transform {
                 String operationString = m.group().replaceAll(" |,", "");
 
                 OperationType operationType=new OperationType(operationString);
+                nr++;
                 operation=operationType.returnCode();
             }
             else
             {
                 throw new IllegalArgumentException("Nu exista aceasta operatie!");
             }
-
+            System.out.println(nr);
             StringBuilder code=new StringBuilder(operation.getCode()+"_");
             //System.out.println(operation.getCode());
 
@@ -235,7 +237,7 @@ public class Transform {
 
 
 
-            //System.out.println(code.toString());
+            System.out.println(code.toString());
 
             return code.toString();
 

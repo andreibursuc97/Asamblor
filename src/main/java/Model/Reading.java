@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 public class Reading {
 
     private static final String detectLabels="^[ \t]*[a-zA-Z][a-zA-Z0-9]*[ \t]*:[ \t]*";
+    private static final String detectComment="^[ \\t]*;";
     private HashMap<String,Integer> labels=new HashMap<>();
 
     public HashMap<String, Integer> getLabels() {
@@ -24,7 +25,7 @@ public class Reading {
         {
             BufferedReader reader = new BufferedReader(new FileReader(filename));
             String line;
-            int nr=1;
+            int nr=0;
             while ((line = reader.readLine()) != null)
             {
                 Pattern op = Pattern.compile(detectLabels);
@@ -32,16 +33,23 @@ public class Reading {
                 if(m.find())
                 {
                     String operationString = m.group().replaceAll("[ \t;:]", "");
-                    labels.put(operationString,nr);
+                    labels.put(operationString,nr+1);
                     records.add(";");
                 }
                 else {
                     records.add(line);
+                    Pattern op2 = Pattern.compile(detectComment);
+                    Matcher m2 = op2.matcher(line);
+                    if(!m2.find())
+                    {nr++;}
                 }
-                nr++;
+
             }
 
-
+            for (HashMap.Entry<String, Integer> entry : labels.entrySet())
+            {
+                System.out.println(entry.getKey() + "/" + entry.getValue());
+            }
 
             reader.close();
             return records;
